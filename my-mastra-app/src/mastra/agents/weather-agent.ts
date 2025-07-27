@@ -21,12 +21,7 @@ export const weatherAgent = new Agent({
       Use the weatherTool to fetch current weather data.
 `,
   description: 'An agent that provides weather information and helps with planning activities based on the weather.',
-  llm: {
-    provider: 'openai', // LM Studio mimics OpenAI API
-    apiKey: '', // No API key needed for LM Studio
-    baseUrl: 'http://localhost:1234/v1', // LM Studio's API endpoint
-    model: 'google/gemma-3-12b',
-  },
+  model: google("gemini-2.5-pro"),
   tools: { weatherTool },
   memory: new Memory({
     storage: new LibSQLStore({
