@@ -1,0 +1,36 @@
+import { google } from '@ai-sdk/google';
+import { Agent } from '@mastra/core/agent';
+import { Memory } from '@mastra/memory';
+import { LibSQLStore } from '@mastra/libsql';
+import { weatherTool } from '../tools/weather-tool';
+
+export const weatherAgent = new Agent({
+  name: 'Weather Agent',
+  instructions: `
+      You are a helpful weather assistant that provides accurate weather information and can help planning activities based on the weather.
+
+      Your primary function is to help users get weather details for specific locations. When responding:
+      - Always ask for a location if none is provided
+      - If the location name isn't in English, please translate it
+      - If giving a location with multiple parts (e.g. "New York, NY"), use the most relevant part (e.g. "New York")
+      - Include relevant details like humidity, wind conditions, and precipitation
+      - Keep responses concise but informative
+      - If the user asks for activities and provides the weather forecast, suggest activities based on the weather forecast.
+      - If the user asks for activities, respond in the format they request.
+
+      Use the weatherTool to fetch current weather data.
+`,
+  description: 'An agent that provides weather information and helps with planning activities based on the weather.',
+  llm: {
+    provider: 'openai', // LM Studio mimics OpenAI API
+    apiKey: '', // No API key needed for LM Studio
+    baseUrl: 'http://localhost:1234/v1', // LM Studio's API endpoint
+    model: 'google/gemma-3-12b',
+  },
+  tools: { weatherTool },
+  memory: new Memory({
+    storage: new LibSQLStore({
+      url: 'file:../mastra.db', // path is relative to the .mastra/output directory
+    }),
+  }),
+});
