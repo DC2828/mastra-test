@@ -6,10 +6,11 @@ import { weatherWorkflow } from './workflows/weather-workflow';
 import { weatherAgent } from './agents/weather-agent';
 import { server } from './mcp/test-mcp-server';
 import { transportServer } from './mcp/transport-server';
+import { MTRTrainAgent } from './agents/MTR-train-agent';
 
 export const mastra = new Mastra({
   workflows: { weatherWorkflow },
-  agents: { weatherAgent },
+  agents: { weatherAgent, MTRTrainAgent },
   mcpServers: {server, transportServer},
   storage: new LibSQLStore({
     // stores telemetry, evals, ... into memory storage, if it needs to persist, change to file:../mastra.db
@@ -17,6 +18,6 @@ export const mastra = new Mastra({
   }),
   logger: new PinoLogger({
     name: 'Mastra',
-    level: 'info',
+    level: 'debug',
   }),
 });
